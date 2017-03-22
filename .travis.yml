@@ -11,7 +11,7 @@ script: true
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker build -t sesamcommunity/sesam-datasource-ftp .;
+    docker build -t sesam/sesam-datasource-ftp .;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push sesamcommunity/sesam-datasource-ftp:latest;
+    docker push sesam/sesam-datasource-ftp:latest;
     fi
