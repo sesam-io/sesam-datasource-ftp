@@ -56,14 +56,13 @@ def requires_auth(f):
 
     return decorated
 
-@app.route('/file', methods=['GET'])
+@app.route('/<sys_id>/file', methods=['GET'])
 @requires_auth
-def get_file():
+def get_file(sys_id):
     logger.info("Get the request: {}".format(request.url))
-    sys_id = request.args.get('sys')
     fpath = request.args.get('fpath')
-    if not sys_id or not fpath:
-        return abort(400, "Missing one of mandatory parameters.")
+    if not fpath:
+        return abort(400, "Missing the mandatory parameter.")
     auth = request.authorization
     sys_url = get_var(sys_id)
     if not sys_url:
@@ -80,6 +79,8 @@ def get_file():
             return abort(500, e)
         #f_c = client.get_content(fpath)
         #return Response(f_c)
+    else:
+        return abort(400, "Not supported protocal.")
 
 if __name__ == '__main__':
     # Set up logging
