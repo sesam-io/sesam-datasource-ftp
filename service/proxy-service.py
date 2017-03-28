@@ -36,7 +36,7 @@ def get_var(var):
         envvar = os.environ[var.upper()]
     else:
         envvar = request.args.get(var)
-    logger.info("Setting %s = %s" % (var, envvar))
+    logger.debug("Setting %s = %s" % (var, envvar))
     return envvar
 
 def authenticate():
@@ -59,7 +59,6 @@ def requires_auth(f):
 @app.route('/<sys_id>/file', methods=['GET'])
 @requires_auth
 def get_file(sys_id):
-    logger.info("Get the request: {}".format(request.url))
     fpath = request.args.get('fpath')
     if not fpath:
         return abort(400, "Missing the mandatory parameter.")
@@ -69,7 +68,6 @@ def get_file(sys_id):
         return abort(400, "Cannot find the endpoint url for {}".format(sys_id))
     f_stream = None
     if sys_url.startswith('ftp://'):
-        logger.info("ftp url: {}".format(sys_url[6:]))
         try:
             client = FTPClient(auth.username, auth.password, sys_url[6:])
             f_stream = client.get_stream(fpath)
@@ -92,6 +90,17 @@ if __name__ == '__main__':
     stdout_handler.setFormatter(logging.Formatter(format_string))
     logger.addHandler(stdout_handler)
 
-    logger.setLevel(logging.DEBUG)
+    loglevel = os.environ.get("LOGLEVEL", "INFO")
+    if "INFO" == loglevel.upper():
+        logger.setLevel(logging.INFO)
+    elif "DEBUG" == loglevel.upper():
+        logger.setLevel(logging.DEBUG)
+    elif "WARN" == loglevel.upper():
+        logger.setLevel(logging.WARN)
+    elif "ERROR" == loglevel.upper():
+        logger.setLevel(logging.ERROR)
+    else:
+        logger.setlevel(logging.INFO)
+        logger.info("Define an unsupported loglevel. Using the default level: INFO.")
 
     app.run(threaded=True, debug=True, host='0.0.0.0')
