@@ -24,7 +24,7 @@ An example of system config:
 This microservice should receive some http request,
 such as "http://sesam-datasource-ftp:5000/{sys_id}/file?fpath={fpath}".
 
-{sys_id} should be an enviroment variable that contains the ftp server url. 
-If you dont want to define {sys_id} as the environment variable. 
+{sys_id} should be an environment variable that contains the ftp server url. 
+If you dont want to define {sys_id} in the environment variables. 
 You also can use this url pattern "http://sesam-datasource-ftp:5000/{sys_id}/file?fpath={fpath}&sys_id=ftp://ftp_server_url".
 
