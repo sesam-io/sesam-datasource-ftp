@@ -35,7 +35,7 @@ class FTPClient():
             raise e
 
     def test(self):
-        return self.ftps.retrlines('LIST')
+        return self.client.retrlines('LIST')
 
     def get_stream(self, fpath):
         """return a file stream"""
@@ -114,7 +114,6 @@ def get_file(sys_id):
         f_stream = client.get_stream(fpath)
         f_stream.seek(0)
         f_name = fpath.split('/')[-1]
-        print(f_name)
         client.quit()
         return send_file(f_stream, attachment_filename=f_name, as_attachment=True)
     except Exception as e:
