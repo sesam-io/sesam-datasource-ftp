@@ -1,4 +1,5 @@
 from flask import Flask, request, Response, abort, send_file
+import cherrypy
 from functools import wraps
 import json
 import logging
@@ -143,4 +144,17 @@ if __name__ == '__main__':
         logger.setlevel(logging.INFO)
         logger.info("Define an unsupported loglevel. Using the default level: INFO.")
 
-    app.run(threaded=True, debug=True, host='0.0.0.0')
+    cherrypy.tree.graft(app, '/')
+
+    # Set the configuration of the web server to production mode
+    cherrypy.config.update({
+        'environment': 'production',
+        'engine.autoreload_on': False,
+        'log.screen': True,
+        'server.socket_port': 5000,
+        'server.socket_host': '0.0.0.0'
+    })
+
+    # Start the CherryPy WSGI web server
+    cherrypy.engine.start()
+    cherrypy.engine.block()
